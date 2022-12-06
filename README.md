@@ -1,2 +1,0 @@
-# training
-Training Freshers
