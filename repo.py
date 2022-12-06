@@ -5,9 +5,9 @@ from db import *
 URI = "https://api.github.com/search/repositories?sort=stars&order=desc&q=created%3A%3E2022-11-01&per_page=100&page=1"
 
 db_session = create_session()
-resp = requests.get(URI)
-if resp.status_code == 200:
-    data = resp.json()
+response = requests.get(URI)
+if response.status_code == 200:
+    data = response.json()
     items = data['items']
     for item in items:
         license = License(
@@ -51,7 +51,8 @@ if resp.status_code == 200:
             full_name = item['full_name'],
             private = item['private'],
             size = item['size'],
-            license_id = license.id
+            license_id = license.id,
+            owner_id = owner.id
         )
         print(repository)
         db_session.add(repository)
