@@ -24,7 +24,7 @@ for i in range(1,6):
                 )
                 db_session.add(license)
                 db_session.commit()
-                print(license)
+                #print(license)
             else:
                 license=License()
                 db_session.add(license)
@@ -55,7 +55,7 @@ for i in range(1,6):
                 )
                 db_session.add(owner)
                 db_session.commit()
-                print(owner)
+                #print(owner)
             else:
                 owner_id_duplicate_list.append(item['owner']['id'])
                 db_session.commit()
@@ -152,6 +152,6 @@ for i in range(1,6):
 
             db_session.add(repository)
             db_session.commit()
-            print(repository)
+            #print(repository)
     else:
         print("Failed to get data")
