@@ -41,3 +41,51 @@ create table repository(
 	foreign key (owner_id) references owner (id)
 ); 
 
+create table commit_branch_url(
+    sha varchar(500) primary key not null,
+    url varchar(500)
+);
+
+create table branch_url(
+    id serial primary key not null,
+    name varchar(500),
+    commit_sha varchar(500) not null,
+    foreign key (commit_sha) references commit_branch_url(sha),
+    protected BOOLEAN
+);
+
+create table issue(
+    url	
+    repository_url varchar(500)
+    labels_url varchar(500)
+    comments_url varchar(500)
+    events_url varchar(500)	
+    html_url varchar(500)	
+    id Integer
+    node_id varchar(500)
+    number Integer
+    title varchar(500)	
+    user(FOREING KEY)	
+    labels array[]
+    state varchar(500)	
+    locked BOOLEAN
+    assignee varchar(500)	
+    assignees array[]
+    milestone varchar(500)	
+    comments Integer
+    created_at datetime
+    updated_at datetime
+    closed_at datetime
+    author_association varchar(500)	
+    active_lock_reason varchar(500)
+    draft varchar(500)
+    pull_request(foreign key)	
+    body varchar(1000)	
+    reactions(foreign key)	
+    timeline_url varchar(500)	
+    performed_via_github_app varchar(500)	
+    state_reason varchar(500)
+
+);
+
+

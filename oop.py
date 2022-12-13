@@ -1,66 +1,61 @@
 import requests
 from model import *
 from loadenv import *
+
 owner_id_Unique_list = []
 owner_id_duplicate_list = []
 
-# for i in range(1,1):
-URI = "https://api.github.com/search/repositories?sort=stars&order=desc&q=created%3A%3E2022-11-01&per_page=100&page=1"
+def insert_license_values(license):
+    if license is not None and license['key']is not None:
+        licenses = License(
+            key = license['key'],
+            name = license['name'],
+            spdx_id = license['spdx_id'],
+            url = license['url'],
+            node_id = license['node_id']
+        )
+        db_session.add(licenses)
+        db_session.commit()
+        return True
+    else:
+        licenses=License()
+        db_session.add(licenses)
+        db_session.commit()
+        return False
 
-db_session = create_session()
-resp = requests.get(URI)
-if resp.status_code == 200:
-    data = resp.json()
-    items = data['items']
-    
-    for item in items:
-        if item['license'] is not None and item['license']['key']is not None:
-            license = License(
-                key = item['license']['key'],
-                name = item['license']['name'],
-                spdx_id = item['license']['spdx_id'],
-                url = item['license']['url'],
-                node_id = item['license']['node_id']
-            )
-            db_session.add(license)
-            db_session.commit()
-        else:
-            license=License()
-            db_session.add(license)
-            db_session.commit()
+def insert_owner_values(owner):
+    if owner['id'] not in owner_id_Unique_list and not None:
+        owner_id_Unique_list.append(owner['id'])
+        owners=Owner(
+            login=owner['login'],
+            id = owner['id'],   
+            node_id = owner['node_id'],
+            avatar_url =owner['avatar_url'],
+            gravatar_id =owner['gravatar_id'],
+            url = owner['url'],
+            html_url = owner['html_url'],
+            followers_url =owner['followers_url'],
+            following_url = owner['following_url'],
+            gists_url = owner['gists_url'],
+            starred_url = owner['starred_url'],
+            subscriptions_url = owner['subscriptions_url'],
+            organizations_url = owner['organizations_url'],
+            repos_url = owner['repos_url'],
+            events_url =owner['events_url'],
+            received_events_url = owner['received_events_url'],
+            type =owner['type'],
+            site_admin =owner['site_admin']
+        )
+        db_session.add(owners)
+        db_session.commit()
+        return True
+    else:
+        owner_id_duplicate_list.append(owner['id'])
+        db_session.commit()
+        return False
 
-
-        if item['owner']['id'] not in owner_id_Unique_list:
-            owner_id_Unique_list.append(item['owner']['id'])
-            if item['owner']['id'] in owner_id_Unique_list and not None:
-                owner=Owner(
-                    login=item['owner']['login'],
-                    id = item['owner']['id'],   
-                    node_id = item['owner']['node_id'],
-                    avatar_url =item['owner']['avatar_url'],
-                    gravatar_id =item['owner']['gravatar_id'],
-                    url = item['owner']['url'],
-                    html_url = item['owner']['html_url'],
-                    followers_url =item['owner']['followers_url'],
-                    following_url = item['owner']['following_url'],
-                    gists_url = item['owner']['gists_url'],
-                    starred_url = item['owner']['starred_url'],
-                    subscriptions_url = item['owner']['subscriptions_url'],
-                    organizations_url = item['owner']['organizations_url'],
-                    repos_url = item['owner']['repos_url'],
-                    events_url =item['owner']['events_url'],
-                    received_events_url = item['owner']['received_events_url'],
-                    type =item['owner']['type'],
-                    site_admin =item['owner']['site_admin']
-                )
-                db_session.add(owner)
-                db_session.commit()
-        else:
-            owner_id_duplicate_list.append(item['owner']['id'])
-            db_session.commit()
-
-        
-        repository = Repository(
+def insert_item_values(item,owner):
+    repository = Repository(
             id = item['id'],
             node_id = item['node_id'],
             name = item['name'],
@@ -138,12 +133,30 @@ if resp.status_code == 200:
             watchers = item['watchers'],
             default_branch = item['default_branch'],
             score = item['score'],
-            license_id = license.id,
-            owner_id = owner.id
+            # license_id = license['id'],
+            # owner_id = owner['id']
         )
-        db_session.add(repository)
-        db_session.commit()
+    db_session.add(repository)
+    db_session.commit()
+    return True
+
+
+
+
+for i in range(1,6):
+    URI = "https://api.github.com/search/repositories?sort=stars&order=desc&q=created%3A%3E2022-11-01&per_page=100&page="+str(i)
+    resp = requests.get(URI)
+    if resp.status_code == 200:
+        db_session = create_session()
+        data = resp.json()
+        items = data['items']
+        for item in items:
+            license = item['license']
+            insert_license_values(license)
+            owner=item['owner']
+            insert_owner_values(owner)
+            insert_item_values(item,owner)
         
-        
-# else:
-#     print("Failed to get data")
+
+    # owner_id = owner['id']
+    # branch=item['branches_url']
