@@ -86,7 +86,7 @@ for i in users:
             db_session.commit()
             print(commit_verification)
 
-            if commits_url[j]['author'] is not None:
+            if commits_url[j]['author'] is not None and commits_url[j]['author']['login'] is not None:
                 author= Author(
                     login =commits_url[j]['author']['login'],
                     id =commits_url[j]['author']['id'],
@@ -116,7 +116,7 @@ for i in users:
                     db_session.add(author)
                     db_session.commit()
 
-            if commits_url[j]['committer'] is not None and commits_url[j]['committer']['login'] :
+            if commits_url[j]['committer'] is not None and commits_url[j]['committer']['login'] is not None:
                 committer= Committer(
                     login =commits_url[j]['committer']['login'],
                     id =commits_url[j]['committer']['id'],
