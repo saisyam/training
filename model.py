@@ -2,7 +2,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String,Boolean, ForeignKey,TIMESTAMP,Text
 from sqlalchemy.orm import relationship
 
+
 Base = declarative_base()
+
 
 class Repository(Base):
     __tablename__ = 'repository'
@@ -95,7 +97,7 @@ class Repository(Base):
 
 class License(Base):
     __tablename__ = 'license'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True,autoincrement = True,)
     key = Column(String(100))
     name = Column(String(200))
     spdx_id = Column(String(100))
@@ -132,3 +134,29 @@ class Owner(Base):
     def __repr__(self):
         return "<owner(login='{}', id='{}', node_id='{}',avatar_url='{}',gravatar_id='{}',url='{}',html_url='{}',followers_url='{}',following_url='{}',gists_url='{}',starred_url='{}',subscriptions_url='{}',organizations_url='{}',repos_url='{}',events_url='{}',received_events_url='{}',type='{}',site_admin='{}')>"\
         .format(self.login,self.id,self.node_id,self.avatar_url,self.gravatar_id,self.url,self.html_url,self.followers_url,self.following_url,self.gists_url,self.starred_url,self.subscriptions_url,self.organizations_url,self.repos_url,self.events_url,self.received_events_url,self.type,self.site_admin)
+
+
+
+class Branch_url(Base):
+
+    __tablename__ = 'branch_url'
+    id = Column(Integer,primary_key=True)
+    name= Column(String(100))
+    protected= Column(Boolean)
+    commit_sha= Column(String(500), ForeignKey("commit_branch_url.sha"), nullable=False)
+    Commit_branch_url = relationship("Commit_branch_url", foreign_keys='Branch_url.commit_sha')
+
+
+    def __repr__(self):
+        return "<branch_url(id={},name='{}',protected={}, commit_sha = '{}')>"\
+            .format(self.id,self.name,self.protected,self.commit_sha)
+
+
+class Commit_branch_url(Base):
+    __tablename__="commit_branch_url"
+    sha= Column(String(500),primary_key = True)
+    url= Column(String(500))
+
+    def __repr__(self):
+        return "<commit_branch_url(sha='{}',url='{}'>"\
+            .format(self.sha,self.url)

@@ -6,7 +6,7 @@ owner_id_Unique_list = []
 owner_id_duplicate_list = []
 
 for i in range(1,6):
-    URI = "https://api.github.com/search/repositories?sort=stars&order=desc&q=created%3A%3E2022-11-01&per_page=100&page="+ str(i)
+    URI = "https://api.github.com/search/repositories?sort=stars&order=desc&q=created%3A%3E2022-11-01&per_page=100&page="+str(i)
 
     db_session = create_session()
     resp = requests.get(URI)
@@ -14,7 +14,7 @@ for i in range(1,6):
         data = resp.json()
         items = data['items']
         for item in items:
-            if item['license'] is not None:
+            if item['license'] is not None and item['license']['key']is not None:
                 license = License(
                     key = item['license']['key'],
                     name = item['license']['name'],
@@ -29,7 +29,6 @@ for i in range(1,6):
                 license=License()
                 db_session.add(license)
                 db_session.commit()
-
             
             if item['owner']['id'] not in owner_id_Unique_list:
                 owner_id_Unique_list.append(item['owner']['id'])
@@ -59,11 +58,6 @@ for i in range(1,6):
             else:
                 owner_id_duplicate_list.append(item['owner']['id'])
                 db_session.commit()
-
-
-
-
-
 
 
 
@@ -153,5 +147,5 @@ for i in range(1,6):
             db_session.add(repository)
             db_session.commit()
             #print(repository)
-    else:
-        print("Failed to get data")
+    # else:
+    #     print("Failed to get data")

@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 
+
 load_dotenv()
 
 def create_db_string():
@@ -22,6 +23,8 @@ def create_session():
     engine = create_engine(db_uri)
     Session = sessionmaker(bind=engine)
     return Session()
+    
+    
 
-def close_session(s):
+def close_session(s): 
     s.close()

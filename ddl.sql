@@ -120,3 +120,25 @@ create table license(
     url varchar(300),
 	node_id varchar(100)
 );
+
+
+
+
+
+
+
+
+create table commit_branch_url(
+		sha varchar(500) primary key not null,
+		url varchar(500)
+	);
+	
+	
+create table branch_url(
+    id serial primary key not null,
+    name varchar(500),
+	protected BOOLEAN,
+    commit_sha varchar(500) not null,
+    foreign key (commit_sha) references commit_branch_url(sha)
+    
+);
