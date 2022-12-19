@@ -28,20 +28,92 @@ CREATE TABLE owner(
     site_admin BOOLEAN
 );
 
-create table repository(
-	id integer primary key,
-	node_id varchar(100) not null,
-	name varchar(100) not null,
-	full_name varchar(100) not null,
-	private boolean not null,
-	size integer,
-	license_id integer not null,
-	foreign key (license_id) references license (id),
-	owner_id integer not null,
-	foreign key (owner_id) references owner (id)
-); 
+CREATE TABLE repository(
+    id INT NOT NULL PRIMARY KEY,
+    node_id VARCHAR(500),
+    name VARCHAR(500),
+    full_name VARCHAR(500),
+    private BOOLEAN,
+    html_url VARCHAR(500),
+    description VARCHAR(500),
+    fork BOOLEAN,
+    url VARCHAR(500),
+    forks_url VARCHAR(500),
+    keys_url VARCHAR(500),
+    collaborators_url VARCHAR(500),
+    teams_url VARCHAR(500),
+    hooks_url VARCHAR(500),
+    issue_events_url VARCHAR(500),
+    events_url VARCHAR(500),
+    assignees_url VARCHAR(500),
+    branches_url VARCHAR(500),
+    tags_url VARCHAR(500),    
+    blobs_url VARCHAR(500),
+    git_tags_url VARCHAR(500),
+    git_refs_url VARCHAR(500),
+    trees_url VARCHAR(500),    
+    statuses_url VARCHAR(500),
+    languages_url VARCHAR(500),
+    stargazers_url VARCHAR(500),    
+    contributors_url VARCHAR(500),    
+    subscribers_url VARCHAR(500),    
+    subscription_url VARCHAR(500),    
+    commits_url VARCHAR(500),    
+    git_commits_url VARCHAR(500),    
+    comments_url VARCHAR(500),
+    issue_comment_url VARCHAR(500),    
+    contents_url VARCHAR(500),    
+    compare_url VARCHAR(500),    
+    merges_url VARCHAR(500),    
+    archive_url VARCHAR(500),    
+    downloads_url VARCHAR(500),    
+    issues_url VARCHAR(500),    
+    pulls_url VARCHAR(500),    
+    milestones_url VARCHAR(500),    
+    notifications_url VARCHAR(500),    
+    labels_url VARCHAR(500),    
+    releases_url VARCHAR(500),    
+    deployments_url VARCHAR(500),    
+    created_at TIMESTAMP,    
+    updated_at TIMESTAMP,
+    pushed_at TIMESTAMP,    
+    git_url    VARCHAR(500),
+    ssh_url VARCHAR(500),    
+    clone_url VARCHAR(500),    
+    svn_url VARCHAR(500),    
+    homepage VARCHAR(500),
+    size int,
+    stargazers_count int,    
+    watchers_count int,
+    language VARCHAR(500),
+    has_issues BOOLEAN,
+    has_projects BOOLEAN,    
+    has_downloads BOOLEAN,
+    has_wiki BOOLEAN,
+    has_pages BOOLEAN,
+    has_discussions BOOLEAN,
+    forks_count INT,
+    mirror_url VARCHAR(500),    
+    archived BOOLEAN,    
+    disabled BOOLEAN,
+    open_issues_count INT,    
+    allow_forking BOOLEAN,    
+    is_template BOOLEAN,
+    web_commit_signoff_required BOOLEAN,
+    topics TEXT [],
+    visibility VARCHAR(500),    
+    forks INT,    
+    open_issues INT,
+    watchers INT,    
+    default_branch VARCHAR(500),
+    score INT,
+	license_id INT ,
+    owner_id INT ,
+	FOREIGN KEY(license_id) REFERENCES license(id),
+	FOREIGN KEY(owner_id) REFERENCES owner(id)
+);
 
-create table commit_branch_url(
+table commit_branch_url(
     sha varchar(500) primary key not null,
     url varchar(500)
 );
@@ -54,38 +126,127 @@ create table branch_url(
     protected BOOLEAN
 );
 
-create table issue(
-    url	
-    repository_url varchar(500)
-    labels_url varchar(500)
-    comments_url varchar(500)
-    events_url varchar(500)	
-    html_url varchar(500)	
-    id Integer
-    node_id varchar(500)
-    number Integer
-    title varchar(500)	
-    user(FOREING KEY)	
-    labels array[]
-    state varchar(500)	
-    locked BOOLEAN
-    assignee varchar(500)	
-    assignees array[]
-    milestone varchar(500)	
-    comments Integer
-    created_at datetime
-    updated_at datetime
-    closed_at datetime
-    author_association varchar(500)	
-    active_lock_reason varchar(500)
-    draft varchar(500)
-    pull_request(foreign key)	
-    body varchar(1000)	
-    reactions(foreign key)	
-    timeline_url varchar(500)	
-    performed_via_github_app varchar(500)	
-    state_reason varchar(500)
-
+create table users(
+   login text,
+	id bigint not null primary key,
+	node_id text,
+	avatar_url text,
+	gravatar_id text,
+	url text,
+	html_url text,
+	followers_url text,
+	following_url text,
+	gists_url text,
+	starred_url text,
+	subscriptions_url text,
+	organizations_url text,
+	repos_url text,
+	events_url text,
+	received_events_url text,
+	type text,
+	site_admin text
 );
 
 
+
+create table reactions(
+	id serial not null primary key,
+	url text,
+	total_count int,
+	laugh int,
+    hooray int,
+	confused int,
+	heart int,
+	rocket int,
+	eyes int
+);
+
+create table labels(
+	id bigint not null primary key,
+	node_id text,
+	url text,
+	name text,
+	color text,
+	defult text,
+	description text
+);
+
+create table assignee(
+	id serial not null primary key,
+    login text,
+	assignee_id bigint,
+	node_id text,
+	avatar_url text,
+	gravatar_id text,
+	url text,
+	html_url text,
+	followers_url text,
+	following_url text,
+	gists_url text,
+	starred_url text,
+	subscriptions_url text,
+	organizations_url text,
+	repos_url text,
+	events_url text,
+	received_events_url text,
+	type text,
+	site_admin text
+);
+
+create table assignees(
+	id serial not null primary key,
+    login text,
+	assignees_id bigint,
+	node_id text,
+	avatar_url text,
+	gravatar_id text,
+	url text,
+	html_url text,
+	followers_url text,
+	following_url text,
+	gists_url text,
+	starred_url text,
+	subscriptions_url text,
+	organizations_url text,
+	repos_url text,
+	events_url text,
+	received_events_url text,
+	type text,
+	site_admin text
+);
+
+CREATE TABLE issue_url(
+id bigint not null primary key,
+url text,
+repository_url text,
+labels_url text,
+comments_url text,
+events_url text,
+html_url text,
+node_id text,
+number bigint not null,
+title text,
+state text,
+locked Boolean,
+-- milestone text,
+comments bigint not null,
+created_at timestamp,
+updated_at timestamp,
+closed_at timestamp,
+author_association text,
+active_lock_reason text,
+body text,
+timeline_url text,
+performed_via_github_app text,
+state_reason text,
+user_id bigint,
+labels_id bigint,
+reactions_id bigint,
+assignee_id bigint,
+assignees_id bigint,
+foreign key(user_id) references users(id),
+foreign key(labels_id) references labels(id),
+foreign key(reactions_id) references reactions(id),
+foreign key(assignee_id) references assignee(id),
+foreign key(assignees_id) references assignees(id)
+);

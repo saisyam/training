@@ -19,7 +19,7 @@ def create_db_string():
 def create_session():
     engine_url = create_db_string()
     engine = create_engine(engine_url)
-    Session = sessionmaker(bind=engine)
+    Session = sessionmaker(bind=engine,expire_on_commit=False)
     return Session()
 
 def close_session(s):

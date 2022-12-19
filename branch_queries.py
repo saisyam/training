@@ -10,9 +10,10 @@ users = db_session.execute(select(Repository.branches_url))
 for i in users:
     branches=i.branches_url
     x=branches[:-9]
-    res = requests.get(x)
+    res = requests.get(x,headers={'User-Agent': 'Mozilla/5.0'})
     if res.status_code == 200:
         dat=res.json()
+        print(dat)
         for branch in range(0,len(dat)):
                 if dat[branch]['commit']['sha'] not in  sha_unique_list:
                     sha_unique_list.append(dat[branch]['commit']['sha'])
@@ -31,10 +32,11 @@ for i in users:
                 db_session.add(branch_url)
                 db_session.commit()
                 count=count+1
-    else:
-        time.sleep(3600)
-        continue
-print(count)
+                print(count)
+    # else:
+        # time.sleep(3600)
+        # continue
+
     
 
 

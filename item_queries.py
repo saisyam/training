@@ -8,13 +8,14 @@ owner_id_duplicate_list = []
 def insert_license_values(license):
     if license is not None and license['key']is not None:
         licenses = License(
+            
             key = license['key'],
             name = license['name'],
             spdx_id = license['spdx_id'],
             url = license['url'],
             node_id = license['node_id']
         )
-        db_session.add(licenses)
+        db_session.add (licenses)
         db_session.commit()
         return True
     else:
@@ -134,7 +135,7 @@ def insert_item_values(item,owner):
             default_branch = item['default_branch'],
             score = item['score'],
             # license_id = license['id'],
-            # owner_id = owner['id']
+            owner_id = owner['id']
         )
     db_session.add(repository)
     db_session.commit()
@@ -144,7 +145,7 @@ def insert_item_values(item,owner):
 
 
 for i in range(1,6):
-    URI = "https://api.github.com/search/repositories?sort=stars&order=desc&q=created%3A%3E2022-11-01&per_page=100&page="+str(i)
+    URI = "https://api.github.com/search/repositories?sort=stars&order=desc&q=created%3A%3E2022-11-01&per_page=5&page="+str(i)
     resp = requests.get(URI)
     if resp.status_code == 200:
         db_session = create_session()
