@@ -2,6 +2,7 @@ import requests
 from model import *
 from db import *
 
+
 owner_id_Unique_list = []
 owner_id_duplicate_list = []
 
