@@ -21,10 +21,17 @@ def create_db_string():
 def create_session():
     db_uri = create_db_string()
     engine = create_engine(db_uri)
-    Session = sessionmaker(bind=engine)
+    Session = sessionmaker(bind=engine, expire_on_commit=False)
     return Session()
     
-    
+
+
+def authentication():
+    TOKEN=os.getenv('token')
+    headers = {
+    'Authorization': 'token '+TOKEN}
+    return headers
+
 
 def close_session(s): 
     s.close()
