@@ -3,6 +3,10 @@ from model import *
 from db import *
 from repo import *
 import time
+
+headers=authentication()
+
+
 sha_unique_list = []
 sha_duplicate_list = []
 count = 0
@@ -15,7 +19,7 @@ for i in obj_branch:
     #print(branches)
     branch_url = branches[:-9]
     #print(branch_url)
-    resp = requests.get(branch_url)
+    resp = requests.get(branch_url,headers=headers)
     if resp.status_code == 200:
         branch_data = resp.json()
         #print(branch_data)
@@ -28,7 +32,7 @@ for i in obj_branch:
                 )
                 db_session.add(commit_branch_url)
                 db_session.commit()
-                db_session.expunge_all()
+                #db_session.expunge_all()
 
             branch_url=Branch_url(
                 name=branch_data[data]['name'],
@@ -37,11 +41,11 @@ for i in obj_branch:
             )
             db_session.add(branch_url)
             db_session.commit()
-            db_session.expunge_all()
+            #db_session.expunge_all()
             count += 1
-    else:
-        time.sleep(3600)
-        continue
+    # else:
+    #     time.sleep(3600)
+    #     continue
 print(count)
     
 
