@@ -1,52 +1,43 @@
 from sqlalchemy import select
 from model import *
-from top_repos import *
+from item_queries import *
 from loadenv import *
-import time
+
+def insert_into_commit_branch(commit):
+    if dat[branch]['commit']['sha'] not in  sha_unique_list:
+        sha_unique_list.append(commit['sha'])
+        commit_branch_url=Commit_branch_url(
+            sha=commit['sha'],
+            url=commit['url']
+        )
+        db_session.add(commit_branch_url)
+        db_session.commit()
+        return True
+
+def insert_into_branch(branch,commit):
+
+    branch_url=Branch_url(    
+        name=branch['name'],
+        protected=branch['protected'],
+        commit_sha=commit['sha']
+    )
+    db_session.add(branch_url)
+    db_session.commit()
+    return True
+
 sha_unique_list=[]
 sha_duplicate_list=[]
-count=0
+headers=authentication()
 users = db_session.execute(select(Repository.branches_url))
 for i in users:
     branches=i.branches_url
     x=branches[:-9]
-    res = requests.get(x,headers={'User-Agent': 'Mozilla/5.0'})
+    res = requests.get(x,headers=headers)
     if res.status_code == 200:
         dat=res.json()
-        print(dat)
         for branch in range(0,len(dat)):
-                if dat[branch]['commit']['sha'] not in  sha_unique_list:
-                    sha_unique_list.append(dat[branch]['commit']['sha'])
-                    commit_branch_url=Commit_branch_url(
-                        sha=dat[branch]['commit']['sha'],
-                        url=dat[branch]['commit']['url']
-                    )
-                    db_session.add(commit_branch_url)
-                    db_session.commit()
+            commit=dat[branch]['commit']
+            insert_into_commit_branch(commit)
+            branch=dat[branch]
+            insert_into_branch(branch,commit)
 
-                branch_url=Branch_url(    
-                    name=dat[branch]['name'],
-                    protected=dat[branch]['protected'],
-                    commit_sha=commit_branch_url.sha
-                )
-                db_session.add(branch_url)
-                db_session.commit()
-                count=count+1
-                print(count)
-    # else:
-        # time.sleep(3600)
-        # continue
-
-    
-
-
-
-
-
-
-
-
-
-# user=db_session.query(Owner).filter(Owner.login.in_(["transitive-bullshit"])).all()
-# for i in user:
-#     print(i.__dict__)

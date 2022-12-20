@@ -12,7 +12,6 @@ def create_db_string():
     user=os.getenv('user')
     password=os.getenv('password')
     port=os.getenv('port')
-
     engine_url="postgresql://"+user+":"+password+"@"+host+":"+port+"/"+database
     return engine_url
 
@@ -21,6 +20,12 @@ def create_session():
     engine = create_engine(engine_url)
     Session = sessionmaker(bind=engine,expire_on_commit=False)
     return Session()
+
+def authentication():
+    TOKEN=os.getenv('token')
+    headers = {
+    'Authorization': 'token '+TOKEN}
+    return headers
 
 def close_session(s):
     s.close()
