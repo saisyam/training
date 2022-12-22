@@ -28,19 +28,10 @@ for i in users:
         count += 1 
   
         for j in range(len(commits_url)):
-            parents=Parents(
-                sha=commits_url[j]['sha'],
-                url=commits_url[j]['url'],
-                html_url=commits_url[j]['html_url']
-
-            )
-            db_session.add(parents)
-            db_session.commit()
-            #print(parents)
 
             commit=Commit(
                 message=commits_url[j]['commit']['message'],
-                url=commits_url[j]['url'],
+                url=commits_url[j]['commit']['url'],
                 comment_count=commits_url[j]['commit']['comment_count']
 
             )
@@ -68,12 +59,12 @@ for i in users:
             #print(commit_committer)
 
             commit_tree=Commit_tree(
-                sha=commits_url[j]['sha'],
-                url=commits_url[j]['url']
+                sha=commits_url[j]['commit']['tree']['sha'],
+                url=commits_url[j]['commit']['tree']['url'] 
 	            
             ) 
             db_session.add(commit_tree)
-            db_session.commit()
+            db_session.commit() 
             #print(commit_tree)
 
             commit_verification=Commit_verification(
@@ -166,6 +157,20 @@ for i in users:
                     db_session.commit()
             else:
                 db_session.commit()
+
+
+
+            for i in range(len(commits_url[j]['parents'])):
+
+                parents=Parents(
+                    sha=commits_url[j]['parents'][i]['sha'],
+                    url=commits_url[j]['parents'][i]['url'],
+                    html_url=commits_url[j]['parents'][i]['html_url']
+
+                )
+                db_session.add(parents)
+                db_session.commit()
+                #print(parents)
 
                     
                     
